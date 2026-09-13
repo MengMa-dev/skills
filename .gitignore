@@ -1,0 +1,9 @@
+.DS_Store
+.cursor/
+.vscode/
+*.log
+.env
+.env.*
+node_modules/
+.skill-packages/
+*.skill
