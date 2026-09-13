@@ -1,0 +1,85 @@
+{
+  "skill_name": "agent-oss-contribute",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "帮我在 GitHub 上搜可以贡献的开源项目，stars 要 1000 以上，最近活跃的，最后给我 Top 3 和项目描述。",
+      "expected_output": "只跑阶段 0：执行本 skill 目录下 scripts/discover_repos.py（须带 --artifact-root），原样展示脚本排出的 Top 3（地址+描述），并写入 <当前任务工作目录>/artifacts/search/<YYYYMMDD-HHMMSS>.md。用户过滤条件译成 --query/--language/--topic/--exclude 等。不分析源码、不写代码。脚本失败则报告 gh/token 错误，不编造仓库。",
+      "files": [],
+      "expectations": [
+        "Runs discover_repos.py with --artifact-root instead of inventing a repo list",
+        "Maps any user-stated filters to script flags",
+        "Shows project URL and description for each of up to 3 repos",
+        "Writes search results to a new timestamped markdown under <cwd>/artifacts/search/ (or user ARTIFACT_ROOT)",
+        "Does not start source analysis or implementation in the same turn"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "GitHub 地址：https://github.com/langchain-ai/langchainjs\n我的技术栈：Python、TypeScript、React、MCP 集成、LangChain.js\n我的目标：找到 1~3 个可以在 2 周内完成、且能对外讲清贡献价值的 PR 方向。按开源项目贡献分析流程输出。",
+      "expected_output": "只跑阶段 1。中文完整报告：depth=3 目录树；Agent 循环引用入口文件/函数；Issue 表或明确无匹配；7 个架构维度含路径+函数名；Top 1~3。写入 <当前任务工作目录>/artifacts/project/langchain-ai-langchainjs/analysis.md。不写代码、不开 PR。",
+      "files": [],
+      "expectations": [
+        "Runs analysis stage only",
+        "Agent loop description cites a concrete file path and function",
+        "Issue table uses the exact column headers or states that no issues matched",
+        "All 7 architecture dimensions include the required fields and a file+function citation",
+        "Writes full analysis to <ARTIFACT_ROOT>/project/langchain-ai-langchainjs/analysis.md",
+        "Does not implement code or open a pull request"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "就做刚才 Top 3 的第 1 名，先出技术方案，先别写代码。",
+      "expected_output": "只跑阶段 2。输出选定方案、问题边界、成功标准、新增/修改文件、实现步骤、验证策略。文件路径来自真实源码。写入对应 project/<owner>-<repo>/design.md。停下来等确认。",
+      "files": [],
+      "expectations": [
+        "Produces the design fields with the exact names from design.md",
+        "Problem boundary includes both in-scope and out-of-scope",
+        "Writes design.md under the project artifact folder",
+        "Does not edit production code in this turn"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "# 技术方案实现\n项目地址：https://github.com/example/agent\n本地路径：/tmp/agent\n前置信息：选定方案、问题边界、成功标准、新增文件、修改文件、实现步骤均已粘贴。",
+      "expected_output": "先只读准备并跑基线，再只定义接口后停下。写入 project/example-agent/implementation.md。不在用户确认前写函数体，不 commit。",
+      "files": [],
+      "expectations": [
+        "Reads target files and style configs before writing",
+        "Stops after interface stubs unless the user waived the gate",
+        "Writes implementation.md under the project artifact folder",
+        "Does not git commit"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "请帮我提交 PR。提交类型参考 feat/fix/refactor/test/docs。按 Problem/Solution/Changes/Testing/Notes for Reviewer 写描述。",
+      "expected_output": "进入阶段 4：按计划 commit（type 受限）、push、gh pr create。正文含规定分节。写入对应 project/<owner>-<repo>/pull-request.md。完成后给出 PR URL。",
+      "files": [],
+      "expectations": [
+        "Uses gh pr create rather than a GitHub web UI workaround",
+        "PR title matches {type}({scope}): description with an allowed type",
+        "PR body includes Problem, Solution, Changes, Testing, Notes for Reviewer",
+        "PR body does not include AI/editor attribution footer or a self-added Test plan checklist",
+        "Writes pull-request.md under the project artifact folder",
+        "Returns the PR URL"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "帮我产出 PR 总结。之前提过的项目是 langchainjs，PR：https://github.com/langchain-ai/langchainjs/pull/142",
+      "expected_output": "只跑阶段 5。先读 <ARTIFACT_ROOT>/project/langchain-ai-langchainjs/ 下 analysis.md、design.md、implementation.md、pull-request.md（缺则注明），再用 gh 拉仓库 stars 与 PR 正文。写入 <ARTIFACT_ROOT>/summary/langchain-ai-langchainjs/<pr名>.md，含五个原样标题：项目简介、本次 PR 背景、如何发现这个问题 / 功能、PR 实现方案、带来哪些收益。不改目标仓库、不开新 PR。",
+      "files": [],
+      "expectations": [
+        "Runs summary stage only",
+        "Reads local ARTIFACT_ROOT/project artifacts before inventing discovery narrative",
+        "Fetches stargazerCount via gh rather than guessing",
+        "Writes summary under <ARTIFACT_ROOT>/summary/<owner>-<repo>/<pr-name>.md",
+        "Uses the five required section headings in order",
+        "Project intro functional description is at most 3 sentences",
+        "Does not edit the target repo or open a new pull request"
+      ]
+    }
+  ]
+}
