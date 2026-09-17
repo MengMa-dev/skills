@@ -2,9 +2,11 @@
 name: agent-oss-contribute
 description: >-
   End-to-end open-source contribution for Agent/LLM projects: discover GitHub
-  repos (stars, recent commits, issue close ratio, PR merge speed, release
-  cadence), analyze an Agent/LLM repo, write a scoped PR plan, implement it,
-  open a GitHub PR, then write a PR summary from saved artifacts.
+  repos (stars, downloads/usage, recent commits, issue close ratio, PR merge
+  speed, release cadence) and rewrite each project description in the user's
+  language (what it does, problem, scenarios), analyze an Agent/LLM repo, write
+  a scoped PR plan, implement it, open a GitHub PR, then write a PR summary
+  from saved artifacts.
   Use when the user wants 搜索可贡献项目, 找开源项目, Agent 开源, MCP/LangChain 仓库,
   star 1000, GitHub 搜仓库; pastes a GitHub URL for 开源贡献分析, PR 方向,
   good first issue, Agent 架构缺陷; asks for 技术方案, 按方案落地, 提交 PR with
@@ -82,7 +84,7 @@ compatibility: Requires Python 3, network access, and GitHub CLI (gh) logged in 
 
 ## 硬约束
 
-- 阶段 0 必须跑 `scripts/discover_repos.py`，禁止用记忆编造仓库榜；必须传 `--artifact-root`；用户口头过滤条件必须译成脚本参数。
+- 阶段 0 必须跑 `scripts/discover_repos.py`，禁止用记忆编造仓库榜；必须传 `--artifact-root` 与 `--user-language`；用户口头过滤条件必须译成脚本参数。项目描述必须用用户语言，覆盖做什么 / 解决的问题 / 适用场景；下载量、使用分、排名以脚本为准，禁止改排名或编造用量。
 - 每阶段结束必须落盘（见「中间产物落盘」），禁止只回复不写文件。
 - 先读该仓库的真实文件和 Issue，再用训练记忆。路径用仓库内相对路径。
 - 贡献范围必须能在约 2 周内完成，禁止「重写编排层」这类方向。
