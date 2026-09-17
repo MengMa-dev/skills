@@ -10,7 +10,7 @@
 |------|------|
 | `PR_URL` | `https://github.com/<owner>/<repo>/pull/<n>`；有则优先 |
 | 项目标识 | 仓库 URL、`owner/repo`、`<owner>-<repo>`、或 repo 短名 |
-| `ARTIFACT_ROOT` | 中间产物根目录；缺省为 `<当前任务工作目录>/artifacts` |
+| `ARTIFACT_ROOT` | 中间产物根目录；缺省为 `<当前任务工作目录>/artifacts`（本仓库 evals 时为 `<仓库根>/test/artifacts`） |
 
 `LOCAL_PATH` 本阶段不需要。不要为了写总结去克隆或切仓库。
 
