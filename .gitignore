@@ -9,3 +9,7 @@ node_modules/
 *.skill
 __pycache__/
 *.pyc
+
+# Repo-root workspace for running skill tests (clones, fixtures, eval runs).
+# Anchored at the repository root so a skill-local test/ directory stays trackable.
+/test/

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Rank GitHub repos for contribution using hard filters + merge/release scores."""
+"""Rank GitHub repos for contribution using hard filters + merge/release scores.
+
+When running this skill's evals or clone-and-run tests in the skills collection
+repo, use the gitignored repo-root ``test/`` directory as the working directory
+and ``--artifact-root``.
+"""
 
 from __future__ import annotations
 

@@ -6,7 +6,7 @@
 
 ## 输入
 
-- `REPO_URL` / `LOCAL_PATH`
+- `REPO_URL` / `LOCAL_PATH`（本仓库 evals 未给路径时，clone 在仓库根 `test/` 下）
 - 选定的 PR 方向（来自 Top 3 或用户指定）
 - 阶段 1 里这条方向的入口文件、风险点、预估工作量
 

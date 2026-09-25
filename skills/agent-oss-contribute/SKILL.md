@@ -42,18 +42,20 @@ compatibility: Requires Python 3, network access, and GitHub CLI (gh) logged in 
 |------|------|
 | `REPO_URL` | GitHub 仓库 URL；阶段 0 不需要 |
 | `PR_URL` | GitHub PR URL（`.../pull/N`）；阶段 5 优先用它定位项目 |
-| `LOCAL_PATH` | 本地仓库根；缺省用当前任务工作目录 |
-| `ARTIFACT_ROOT` | 中间产物根目录；缺省为 `<当前任务工作目录>/artifacts` |
+| `LOCAL_PATH` | 本地仓库根；缺省用当前任务工作目录（本仓库 evals 未指定时 clone 到仓库根 `test/`） |
+| `ARTIFACT_ROOT` | 中间产物根目录；缺省为 `<当前任务工作目录>/artifacts`（本仓库 evals 时即 `<仓库根>/test/artifacts`） |
 | 技术栈 | 未给则用：Python、TypeScript、React、MCP 集成、LangChain.js |
 | 目标周期 | 未给则用：2 周 |
 
 **当前任务工作目录**：本阶段开始时进程的工作目录（cwd / workspace root）。不绑定任何特定编辑器或 Agent 产品；用户显式给出 `ARTIFACT_ROOT` 时以用户为准。
 
+本仓库跑 skill 测试 / `evals/` 时：工作目录、fixture、以及未给出 `LOCAL_PATH` 时的 clone 目标，均为技能集合仓库根下的 `test/`（已 gitignore，不要提交其中内容）。日常使用仍以用户 cwd / `LOCAL_PATH` / `ARTIFACT_ROOT` 为准。
+
 阶段 1–4 工作目录必须是目标仓库。阶段 3、4 禁止改别的 repo。阶段 5 不要求切到目标仓库，且禁止改任何仓库代码。
 
 ## 中间产物落盘
 
-每个阶段在回复用户的同时，必须把**该阶段完整输出**写入 `ARTIFACT_ROOT`（默认 `<当前任务工作目录>/artifacts`）。聊天输出与落盘内容一致；先写文件再结束本阶段。路径一律相对 `ARTIFACT_ROOT` 书写与落盘；回复用户时可附绝对路径方便打开。
+每个阶段在回复用户的同时，必须把**该阶段完整输出**写入 `ARTIFACT_ROOT`（默认 `<当前任务工作目录>/artifacts`；本仓库 evals 时为 `<仓库根>/test/artifacts`）。聊天输出与落盘内容一致；先写文件再结束本阶段。路径一律相对 `ARTIFACT_ROOT` 书写与落盘；回复用户时可附绝对路径方便打开。
 
 | 阶段 | 相对 `ARTIFACT_ROOT` 的路径 | 规则 |
 |------|------|------|
