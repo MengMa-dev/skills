@@ -7,28 +7,30 @@
 | 字段 | 默认 |
 |------|------|
 | `REPO_URL` | 必填 |
-| 技术栈 | 未给则用流水线默认栈 |
+| 技术栈 | 未给则用流水线默认栈（Python、TypeScript、Go、Rust） |
 | 目标周期 | 未给则用：2 周 |
 | 目标数量 | 1~3 个 PR 方向 |
 
-当前工作区若已是该仓库，直接读本地源码。否则用 `gh` 拉 Issue / 文件，必要时浅克隆后再读。本仓库 evals / 测试未给 `LOCAL_PATH` 时，克隆到 `<仓库根>/test/<owner>-<repo>/`。
+当前工作区若已是该仓库，直接读本地源码。否则用 `gh` 拉 Issue / 文件，必要时浅克隆后再读。
 
 ## 工作流
 
 ```
-- [ ] 1. 准备工作：读介绍文档、Agent 规范、常规配置 + 目录树 + 描述 Agent 循环
+- [ ] 1. 准备工作：读介绍文档、Agent 规范、常规配置 + 目录树 + 描述核心执行路径
 - [ ] 2. 维度一：Issue 筛选
-- [ ] 3. 维度二：七层架构缺陷（先读 architecture-dimensions.md）
+- [ ] 3. 维度二：七维贡献缺口（先读 contribution-dimensions.md）
 - [ ] 4. 综合 Top 3 贡献建议
 ```
 
-不要跳过维度二。Issue 筛不出合格项时，明确写「无符合条件的 Issue」，Top 3 仍必须从源码缺陷给出。
+不要跳过维度二。Issue 筛不出合格项时，明确写「无符合条件的 Issue」，Top 3 仍必须从源码缺口给出。
+
+不要改用 Agent 七层。即使用户给的是 Agent 仓库，本阶段仍按通用七维取证；Agent 架构层分析属于 `agent-oss-contribute`。
 
 ---
 
 ## 1. 准备工作
 
-先读完下面三类文件，再画目录树、再写 Agent 循环。禁止只读 `README.md` 就进入维度分析。不存在的路径跳过，并在报告里列「未找到」。报告只写已读/未找到清单和从中得到的约束，不要粘贴文件全文。
+先读完下面三类文件，再画目录树、再写核心路径。禁止只读 `README.md` 就进入维度分析。不存在的路径跳过，并在报告里列「未找到」。报告只写已读/未找到清单和从中得到的约束，不要粘贴文件全文。
 
 **项目介绍**（仓库根与 `docs/`）：
 
@@ -37,12 +39,11 @@
 - `CHANGELOG.md` / `HISTORY.md` / `CHANGES.md`
 - `ARCHITECTURE.md`、`DESIGN.md`，以及根目录或 `docs/` 里的 SPEC / RFC
 
-**Agent 规范**（本阶段必查；在仓库根、`.github/`、`.cursor/`、`docs/` 查找并阅读存在的文件）：
+**Agent 规范**（写给 coding agent 或贡献者的指令；在仓库根、`.github/`、`.cursor/`、`docs/` 查找）：
 
 - `AGENTS.md`、`AGENT.md`、`CLAUDE.md`、`GEMINI.md`、`COPILOT.md`
 - `.github/copilot-instructions.md`、`.github/instructions/`
 - `.cursorrules`、`.cursor/rules/`
-- 仓库自己的 Agent / MCP / 工具协议说明（文件名或标题含 agent protocol、MCP、tool schema）
 - 文件名含 agent / copilot / claude / cursor rules 的其他规范
 
 **常规配置**（用来确认语言、入口、脚本和约束；锁文件只看存在与否，不要逐行读）：
@@ -53,18 +54,16 @@
 - CI：`.github/workflows/` 里的主 workflow（只看测试与发布命令）
 - 风格：`.editorconfig`、`ruff.toml`、eslint / rustfmt / gofmt 配置（只看项目强制的风格，不展开全部规则）
 
-然后读项目主入口（`main.py` / `index.ts` / `app.py` 等，按仓库实际入口）。
+然后读项目主入口（按仓库实际入口：`main`、`cmd/`、包入口、`index.ts` 等）。
 
 然后输出 **depth=3 的目录结构**。在核心模块目录旁标注 `← 核心`。
 
 接着用 2~3 句话回答：
 
-- 这个项目的核心 Agent 循环是什么？
-- 使用了哪种规划范式？（ReAct / Plan-and-Execute / CoT / 无显式规划 / 其他并命名）
+- 这个项目的核心执行路径是什么？（从入口到主要产出）
+- 架构风格是什么？（库 / CLI / 服务 / 框架扩展 / 单体应用 / 其他并命名）
 
-这两句必须引用入口文件或循环函数，禁止只复述 README 营销文案。
-
-非 Agent 项目也要跑完全流程：规划层若根本不存在，维度二里写成「缺失」，这本身就是贡献机会，不要因此中止。
+这两句必须引用入口文件或主函数，禁止只复述 README 营销文案。
 
 ---
 
@@ -97,11 +96,11 @@ gh issue list --repo OWNER/REPO --state open --limit 100 \
 
 ---
 
-## 3. 分析维度二：架构层缺陷
+## 3. 分析维度二：贡献缺口
 
-先完整阅读 [architecture-dimensions.md](architecture-dimensions.md)，再按那 7 个维度逐项检查源码。
+先完整阅读 [contribution-dimensions.md](contribution-dimensions.md)，再按那 7 个维度逐项检查源码。
 
-每个维度都必须定位到 **具体文件路径 + 函数名**。禁止「整体上看上下文管理较弱」这类空话。找不到实现就写清搜过哪些目录/符号，结论标成缺失。
+每个维度都必须定位到 **具体文件路径 + 函数名**。禁止「整体上看错误处理较弱」这类空话。找不到实现就写清搜过哪些目录/符号，结论标成缺失。
 
 **每个维度固定输出（标题与字段名不要改）：**
 
@@ -117,15 +116,15 @@ gh issue list --repo OWNER/REPO --state open --limit 100 \
 
 **可对外讲清的贡献价值：**（一句话：这个贡献解决了什么、对谁有用）
 
-七个维度标题按 `architecture-dimensions.md` 中的顺序原样使用。
+七个维度标题按 `contribution-dimensions.md` 中的顺序原样使用。
 
-影响程度要诚实：只有会在生产中丢数据、无法恢复、或工具选错导致错误副作用时才标 high。纯体验优化标 low。
+影响程度要诚实：只有会在生产中丢数据、无法恢复、错误副作用、或可被外部输入触发的安全问题时才标 high。纯体验或纯文档优化标 low。
 
 ---
 
 ## 4. 最终输出：Top 3 贡献建议
 
-综合 Issue 与七层分析，按**可对外讲清的贡献价值 × 可完成性**排序，最多 3 条。优先满足：
+综合 Issue 与七维分析，按**可对外讲清的贡献价值 × 可完成性**排序，最多 3 条。优先满足：
 
 1. 能在目标周期内完成（默认 2 周）
 2. 和用户技术栈重叠
@@ -145,7 +144,7 @@ gh issue list --repo OWNER/REPO --state open --limit 100 \
 - 为什么适合我：（结合用户技术栈）
 - 预计工作量：小 / 中 / 大
 - 可对外讲清的贡献价值：（具体技术决策与对仓库/用户的收益，不要空泛的「熟悉开源」）
-- 风险点：（维护者偏好、测试缺口、协议兼容、需要设计讨论等）
+- 风险点：（维护者偏好、测试缺口、兼容性、需要设计讨论等）
 
 工作量约定：小 ≈ 1~3 天，中 ≈ 1 周，大 ≈ 2 周。超过 2 周的不要进 Top 3。
 
@@ -157,7 +156,7 @@ gh issue list --repo OWNER/REPO --state open --limit 100 \
 <ARTIFACT_ROOT>/project/<owner>-<repo>/analysis.md
 ```
 
-- `<owner>-<repo>` 来自 `REPO_URL`（例：`langchain-ai-langchainjs`）。
+- `<owner>-<repo>` 来自 `REPO_URL`（例：`pallets-click`）。
 - 目录不存在则创建；`analysis.md` 已存在则**覆盖**为本次全文。
 - 内容与聊天输出一致。
 

@@ -25,6 +25,7 @@
       "expectations": [
         "Runs analysis stage only",
         "Uses <repo-root>/test as working directory and clone target when LOCAL_PATH is omitted",
+        "Prep reads project intro docs, agent instruction files, and conventional config before analysis, and lists missing paths",
         "Agent loop description cites a concrete file path and function",
         "Issue table uses the exact column headers or states that no issues matched",
         "All 7 architecture dimensions include the required fields and a file+function citation",

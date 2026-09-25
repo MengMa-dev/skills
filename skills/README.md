@@ -17,9 +17,29 @@
 
 **前置依赖：** Python 3、外网、已登录的 `gh` 或环境变量 `GH_TOKEN` / `GITHUB_TOKEN`。
 
-适用：搜可贡献的 Agent 向开源项目、给 GitHub 仓库找 PR 方向、出技术方案、按方案落地、提交 PR、复盘已提 PR。不适用私有产品功能开发或与 Agent/LLM 无关的泛开源扫仓。
+适用：搜可贡献的 Agent 向开源项目、给 GitHub 仓库找 PR 方向、出技术方案、按方案落地、提交 PR、复盘已提 PR。不适用私有产品功能开发。与 Agent/LLM 无关的泛开源贡献用 [`oss-contribution`](#oss-contribution)。
 
 中间产物默认写到**当前任务工作目录**下的 `artifacts/`（可用 `ARTIFACT_ROOT` 覆盖），不依赖固定本机路径或特定编辑器。
 
 `evals/` 仅供维护者回归，安装与日常使用不必带上。本仓库跑 evals / 脚本测试时，工作目录、fixture 与 clone 目标均为仓库根目录的 `test/`（已 gitignore）。
 
+## `oss-contribution`
+
+面向**任意**开源仓库的贡献流水线，阶段与门闩同 `agent-oss-contribute`。发现默认不限领域；分析用通用七维（错误处理、API 兼容、测试、扩展点、文档、性能、安全），不用 Agent 架构七层。
+
+| 阶段 | 能干什么 |
+|------|----------|
+| 0 发现 | 按 stars、活跃度、Issue 关闭比、PR 合并速度、Release 节奏筛 GitHub 仓库，给出 Top 3；默认 `--domain any`，语言跟 Python / TypeScript / Go / Rust |
+| 1 分析 | 读目标仓库源码与 Issue，找 2 周内可完成、且能对外讲清贡献价值的 PR 方向 |
+| 2 方案 | 把选定方向写成可落地的技术方案：边界、成功标准、文件清单、实现步骤 |
+| 3 落地 | 按方案改代码：先接口后实现，最小侵入、向后兼容 |
+| 4 提 PR | `feat` / `fix` / `refactor` / `test` / `docs` 提交并开 GitHub PR |
+| 5 总结 | 根据已提 PR 与中间产物写复盘（项目简介、背景、发现过程、方案、收益） |
+
+**前置依赖：** Python 3、外网、已登录的 `gh` 或环境变量 `GH_TOKEN` / `GITHUB_TOKEN`。
+
+适用：搜可贡献的开源项目、给任意 GitHub 仓库找 PR 方向、出技术方案、按方案落地、提交 PR、复盘已提 PR。Agent / LLM / MCP 架构层贡献用 `agent-oss-contribute`。不适用私有产品功能开发。
+
+中间产物默认写到**当前任务工作目录**下的 `artifacts/`（可用 `ARTIFACT_ROOT` 覆盖）。
+
+`evals/` 仅供维护者回归，安装与日常使用不必带上。本仓库跑 evals / 脚本测试时，工作目录、fixture 与 clone 目标均为仓库根目录的 `test/`（已 gitignore）。
