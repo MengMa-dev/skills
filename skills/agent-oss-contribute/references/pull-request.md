@@ -4,7 +4,7 @@
 
 ## 提交前检查
 
-在 `LOCAL_PATH` 下**并行**收集：
+在 `LOCAL_PATH` 下**并行**收集（本仓库 evals 时 `LOCAL_PATH` 在仓库根 `test/` 下）：
 
 - `git status`（含未跟踪文件）
 - `git diff`（staged + unstaged）

@@ -22,9 +22,9 @@ python3 "<本 skill 根目录>/scripts/discover_repos.py" \
   --artifact-root "<ARTIFACT_ROOT>"
 ```
 
-需要网络权限。若当前 cwd 不是 skill 根，必须传入脚本的绝对路径（由 skill 根解析得到）。
+需要网络权限。若当前 cwd 不是 skill 根，必须传入脚本的绝对路径（由 skill 根解析得到）。本仓库 evals / 脚本测试的 cwd 是仓库根 `test/`。
 
-**每次搜索都必须传 `--artifact-root`**（即本 skill 的 `ARTIFACT_ROOT`，默认 `<当前任务工作目录>/artifacts`）。这样脚本才能读取 `search/` 历史，避免反复推荐同一批仓库。
+**每次搜索都必须传 `--artifact-root`**（即本 skill 的 `ARTIFACT_ROOT`，默认 `<当前任务工作目录>/artifacts`；evals 时即为 `<仓库根>/test/artifacts`）。这样脚本才能读取 `search/` 历史，避免反复推荐同一批仓库。
 
 **每次搜索都必须传 `--user-language`**：从用户当前消息判定（中文→`zh`，英文→`en`，日文→`ja`，其余用 BCP-47 短码）。未指定时默认 `zh`。该参数写入过滤说明，并约束下面的项目描述语言。
 
