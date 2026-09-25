@@ -5,14 +5,15 @@
     {
       "id": 0,
       "prompt": "帮我在 GitHub 上搜可以贡献的开源项目，stars 要 1000 以上，最近活跃的，最后给我 Top 3 和项目描述。",
-      "expected_output": "只跑阶段 0：工作目录为本仓库根下 gitignore 的 test/。执行本 skill 目录下 scripts/discover_repos.py（须带 --artifact-root），原样展示脚本排出的 Top 3（地址+描述），并写入 <仓库根>/test/artifacts/search/<YYYYMMDD-HHMMSS>.md。用户过滤条件译成 --query/--language/--topic/--exclude 等。不分析源码、不写代码。脚本失败则报告 gh/token 错误，不编造仓库。",
+      "expected_output": "只跑阶段 0：执行本 skill 目录下 scripts/discover_repos.py（须带 --artifact-root 与 --user-language zh），原样保留脚本排出的 Top 3 排名/地址/得分/下载量等使用信号，但项目描述必须用中文改写并覆盖做什么、解决的问题、适用场景（不要粘贴 GitHub 英文简介）。写入 <当前任务工作目录>/artifacts/search/<YYYYMMDD-HHMMSS>.md。用户过滤条件译成 --query/--language/--topic/--exclude 等。不分析源码、不写代码。脚本失败则报告 gh/token 错误，不编造仓库。",
       "files": [],
       "expectations": [
-        "Runs with working directory <repo-root>/test",
-        "Runs discover_repos.py with --artifact-root instead of inventing a repo list",
+        "Runs discover_repos.py with --artifact-root and --user-language instead of inventing a repo list",
         "Maps any user-stated filters to script flags",
-        "Shows project URL and description for each of up to 3 repos",
-        "Writes search results to a new timestamped markdown under <repo-root>/test/artifacts/search/ (or user ARTIFACT_ROOT)",
+        "Shows project URL plus a user-language description covering what it does, the core problem, and applicable scenarios",
+        "Shows usage signals (registry download counts and/or stars/forks) and the usage score from the script",
+        "Does not change script ranking or invent download/star numbers",
+        "Writes search results to a new timestamped markdown under <cwd>/artifacts/search/ (or user ARTIFACT_ROOT)",
         "Does not start source analysis or implementation in the same turn"
       ]
     },
